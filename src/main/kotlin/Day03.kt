@@ -10,6 +10,7 @@ fun main() {
 }
 
 class Day03(private val input: List<String>) {
+
     fun part1(): Int {
         val (partNumbers, symbols) = EngineSchematic.from(input) { it != '.' }
         return partNumbers
@@ -27,6 +28,7 @@ class Day03(private val input: List<String>) {
             }
         }
     }
+
 }
 
 private data class EngineSchematic(val partNumbers: Set<PartNumber>, val symbols: Set<Symbol>) {

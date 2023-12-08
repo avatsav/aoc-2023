@@ -4,28 +4,30 @@
  */
 
 fun main() {
-    val day02 = Day02(readInput("Day02").map { Game.from(it) })
+    val day02 = Day02(readInput("Day02"))
     println(day02.part1(12, 13, 14))
     println(day02.part2())
 }
 
 
-class Day02(private val input: List<Game>) {
+class Day02(input: List<String>) {
+
+    private val games = input.map { Game.from(it) }
 
     fun part1(red: Int, green: Int, blue: Int): Int {
-        return input
+        return games
             .filter { it.isPossible(red, green, blue) }
             .sumOf { it.id }
     }
 
     fun part2(): Int {
-        return input.sumOf { it.power() }
+        return games.sumOf { it.power() }
     }
 
 }
 
 
-data class Game(val id: Int, val maxRedsPulled: Int, val maxGreensPulled: Int, val maxBluesPulled: Int) {
+private data class Game(val id: Int, val maxRedsPulled: Int, val maxGreensPulled: Int, val maxBluesPulled: Int) {
 
     fun isPossible(red: Int, green: Int, blue: Int): Boolean =
         maxRedsPulled <= red && maxGreensPulled <= green && maxBluesPulled <= blue

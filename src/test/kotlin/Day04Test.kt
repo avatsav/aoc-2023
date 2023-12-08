@@ -11,7 +11,7 @@ class Day04Test : FunSpec({
             "Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36",
             "Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"
         )
-        val day04 = Day04(input.map { Card.from(it) })
+        val day04 = Day04(input)
         day04.part1() shouldBe 13
         day04.part2() shouldBe 30
     }

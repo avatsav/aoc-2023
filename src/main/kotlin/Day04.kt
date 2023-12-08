@@ -1,24 +1,26 @@
 import kotlin.math.pow
 
 /**
- * Day 3 - Scratch Cards
+ * Day 4 - Scratch Cards
  * https://adventofcode.com/2023/day/4
  */
 fun main() {
-    val day04 = Day04(readInput("Day04").map { Card.from(it) })
+    val day04 = Day04(readInput("Day04"))
     println(day04.part1())
     println(day04.part2())
 }
 
-class Day04(private val input: List<Card>) {
+class Day04(input: List<String>) {
+
+    private val cards = input.map { Card.from(it) }
 
     fun part1(): Int {
-        return input.sumOf { it.score }
+        return cards.sumOf { it.score }
     }
 
     fun part2(): Int {
-        val scratchCards = IntArray(input.size) { 1 }
-        input.forEachIndexed { originalCardIndex, card ->
+        val scratchCards = IntArray(cards.size) { 1 }
+        cards.forEachIndexed { originalCardIndex, card ->
             repeat(card.winningMatches.size) { copyCardIndex ->
                 scratchCards[originalCardIndex + copyCardIndex + 1] += scratchCards[originalCardIndex]
             }
@@ -27,8 +29,7 @@ class Day04(private val input: List<Card>) {
     }
 }
 
-data class Card(val winningMatches: Set<Int>, val score: Int) {
-
+private data class Card(val winningMatches: Set<Int>, val score: Int) {
     companion object {
         // Example - Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53"
         fun from(line: String): Card {
