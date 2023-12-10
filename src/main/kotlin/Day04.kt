@@ -35,12 +35,10 @@ private data class Card(val winningMatches: Set<Int>, val score: Int) {
         fun from(line: String): Card {
             val winningNumbers = line.substringAfter(":")
                 .substringBefore("|")
-                .split(" ")
-                .filter { it.isNotBlank() }
+                .splitNonEmpty()
                 .map { it.toInt() }.toSet()
             val allNumbers = line.substringAfter("|")
-                .split(" ")
-                .filter { it.isNotBlank() }
+                .splitNonEmpty()
                 .map { it.toInt() }.toSet()
 
             val winningMatches = winningNumbers.intersect(allNumbers)

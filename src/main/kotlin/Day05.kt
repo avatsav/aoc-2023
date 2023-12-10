@@ -40,10 +40,14 @@ private data class Almanac(val seeds: Set<Long>, val seedRanges: Set<LongRange>,
     companion object {
         fun from(input: List<String>): Almanac {
             val seeds =
-                input.first().substringAfter(":").trim().split(" ").filter { it.isNotBlank() }.map { it.toLong() }
+                input.first().substringAfter(":").trim()
+                    .splitNonEmpty()
+                    .map { it.toLong() }
                     .toSet()
 
-            val seedRange = seeds.chunked(2).map { LongRange(it.first(), it.first() + it.last() - 1) }.toSet()
+            val seedRange = seeds.chunked(2)
+                .map { LongRange(it.first(), it.first() + it.last() - 1) }
+                .toSet()
 
             val manual = input.drop(2) // don't need the first 2 lines anymore
                 .fold(mutableListOf(mutableListOf<RangeMap>())) { listOfLists, line ->
