@@ -1,4 +1,4 @@
- import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class Day05Test : FunSpec({
@@ -41,6 +41,7 @@ class Day05Test : FunSpec({
         )
         val day05 = Day05(input)
         day05.part1() shouldBe 35
+        day05.part2() shouldBe 46
     }
 
 })

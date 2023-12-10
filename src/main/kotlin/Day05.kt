@@ -1,3 +1,8 @@
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+
 /**
  * Day 5 - If You Give A Seed A Fertilizer
  * https://adventofcode.com/2023/day/5
@@ -6,27 +11,39 @@
 fun main() {
     val day05 = Day05(readInput("Day05"))
     println(day05.part1())
+    println(day05.part2())
 }
 
 
-class Day05(private val input: List<String>) {
+class Day05(input: List<String>) {
+
+    private val almanac = Almanac.from(input)
 
     fun part1(): Long {
-        val (seeds, manual) = Almanac.from(input)
-        return seeds.minOf { seed -> manual.findLocation(seed) }
+        return almanac.seeds.minOf { seed -> almanac.manual.findLocation(seed) }
+    }
+
+    // Brute-force! :(
+    fun part2(): Long {
+        return runBlocking(Dispatchers.Default) {
+            almanac.seedRanges.map { seedRange ->
+                async {
+                    seedRange.minOf { seed -> almanac.manual.findLocation(seed) }
+                }
+            }.awaitAll().min()
+        }
     }
 
 }
 
-private data class Almanac(val seeds: Set<Long>, val manual: List<CategoryMap>) {
+private data class Almanac(val seeds: Set<Long>, val seedRanges: Set<LongRange>, val manual: List<CategoryMap>) {
     companion object {
         fun from(input: List<String>): Almanac {
-            val seeds = input.first()
-                .substringAfter(":").trim()
-                .split(" ")
-                .filter { it.isNotBlank() }
-                .map { it.toLong() }
-                .toSet()
+            val seeds =
+                input.first().substringAfter(":").trim().split(" ").filter { it.isNotBlank() }.map { it.toLong() }
+                    .toSet()
+
+            val seedRange = seeds.chunked(2).map { LongRange(it.first(), it.first() + it.last() - 1) }.toSet()
 
             val manual = input.drop(2) // don't need the first 2 lines anymore
                 .fold(mutableListOf(mutableListOf<RangeMap>())) { listOfLists, line ->
@@ -36,7 +53,7 @@ private data class Almanac(val seeds: Set<Long>, val manual: List<CategoryMap>) 
                     }
                     listOfLists
                 }
-            return Almanac(seeds, manual)
+            return Almanac(seeds, seedRange, manual)
         }
     }
 }
@@ -79,6 +96,7 @@ private fun List<CategoryMap>.findLocation(seed: Long): Long {
 private fun CategoryMap.findDestinationOrNull(seed: Long): Long? {
     return this.firstOrNull { seed in it.sourceRange }?.findDestination(seed)
 }
+
 
 
 
