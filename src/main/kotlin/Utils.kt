@@ -16,3 +16,7 @@ inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long {
 
 fun String.splitNonEmpty(): List<String> = trim()
     .split("\\s+".toRegex())
+
+
+fun <T> Sequence<T>.repeatInfinitely() = sequence { while (true) yieldAll(this@repeatInfinitely) }
+
