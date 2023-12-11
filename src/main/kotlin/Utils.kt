@@ -4,7 +4,7 @@ import kotlin.io.path.readLines
 /**
  * Reads lines from the given input txt file.
  */
- fun readInput(name: String) = Path("src/main/kotlin/inputs/$name.txt").readLines()
+fun readInput(name: String) = Path("src/main/kotlin/inputs/$name.txt").readLines()
 
 inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long {
     var product: Long = 1.toLong()
@@ -17,6 +17,11 @@ inline fun <T> Iterable<T>.productOf(selector: (T) -> Long): Long {
 fun String.splitNonEmpty(): List<String> = trim()
     .split("\\s+".toRegex())
 
-
 fun <T> Sequence<T>.repeatInfinitely() = sequence { while (true) yieldAll(this@repeatInfinitely) }
 
+fun Long.lcm(other: Long): Long =
+    (this * other) / this.gcd(other)
+
+tailrec fun Long.gcd(other: Long): Long =
+    if (other == 0L) this
+    else other.gcd(this % other)
